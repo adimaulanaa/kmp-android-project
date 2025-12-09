@@ -14,7 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun HomeScreen(onNavigateDetail: () -> Unit) {
+fun HomeScreen(
+    onNavigateDetail: () -> Unit,
+    onNavigateDashboard: () -> Unit,
+    onNavigateProfile: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -26,6 +30,14 @@ fun HomeScreen(onNavigateDetail: () -> Unit) {
             Spacer(Modifier.height(16.dp))
             Button(onClick = onNavigateDetail) {
                 Text("Go to Detail")
+            }
+            Spacer(Modifier.height(16.dp))
+            Button(onClick = onNavigateDashboard) {
+                Text("Go to Dash")
+            }
+            Spacer(Modifier.height(16.dp))
+            Button(onClick = onNavigateProfile) {
+                Text("Go to Profile")
             }
         }
     }
