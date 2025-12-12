@@ -18,9 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.bantraka.learningandroid.core.components.AppTopBar
+import com.bantraka.learningandroid.core.components.CBasicDropdown
 import com.bantraka.learningandroid.core.components.CBasicField
 import com.bantraka.learningandroid.core.components.CButton
+import com.bantraka.learningandroid.core.components.CDropdown
+import com.bantraka.learningandroid.core.components.CDropdownSearch
 import com.bantraka.learningandroid.core.components.CPasswordField
+import com.bantraka.learningandroid.core.components.DropdownItem
 import learningandroid.composeapp.generated.resources.Res
 import learningandroid.composeapp.generated.resources.arrow_left
 
@@ -45,6 +49,29 @@ fun ComponentsPage(onBack: () -> Unit) {
     ) { paddingValues ->
         var username by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
+        var gender by remember { mutableStateOf("") }
+        var selectGender by remember { mutableStateOf<DropdownItem?>(null) }
+        val genders = listOf(
+            DropdownItem(value = "0", label = "Male"),
+            DropdownItem(value = "1", label = "Female"),
+            DropdownItem(value = "2", label = "Other")
+        )
+        var selectedCity by remember { mutableStateOf<DropdownItem?>(null) }
+        val cities = listOf(
+            DropdownItem("1", "Jakarta"),
+            DropdownItem("2", "Bandung"),
+            DropdownItem("3", "Surabaya"),
+            DropdownItem("4", "Yogyakarta"),
+            DropdownItem("1", "Jakarta"),
+            DropdownItem("2", "Bandung"),
+            DropdownItem("3", "Surabaya"),
+            DropdownItem("4", "Yogyakarta"),
+            DropdownItem("1", "Jakarta"),
+            DropdownItem("2", "Bandung"),
+            DropdownItem("3", "Surabaya"),
+            DropdownItem("4", "Yogyakarta"),
+        )
+
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -65,6 +92,30 @@ fun ComponentsPage(onBack: () -> Unit) {
                 value = password,
                 onValueChange = { password = it },
                 hint = "Enter your Password"
+            )
+            Spacer(Modifier.height(16.dp))
+            CBasicDropdown(
+                label = "Gender",
+                value = gender,
+                hint = "Select gender",
+                options = listOf("Male", "Female", "Other"),
+                onSelected = { gender = it }
+            )
+            Spacer(Modifier.height(16.dp))
+            CDropdown(
+                label = "Gender",
+                value = selectGender,
+                hint = "Select gender",
+                options = genders,
+                onSelected = { selectGender = it }
+            )
+            Spacer(Modifier.height(16.dp))
+            CDropdownSearch(
+                label = "City",
+                value = selectedCity,
+                hint = "Select city",
+                options = cities,
+                onSelected = { selectedCity = it }
             )
         }
     }
