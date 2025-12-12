@@ -11,7 +11,8 @@ import com.bantraka.learningandroid.core.components.*
 fun HomeScreen(
     onNavigateDetail: () -> Unit,
     onNavigateDashboard: () -> Unit,
-    onNavigateProfile: () -> Unit
+    onNavigateProfile: () -> Unit,
+    onNavigateComponents: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -35,6 +36,11 @@ fun HomeScreen(
             CButton(
                 text = "Go to Profile",
                 onClick = onNavigateProfile
+            )
+            Spacer(Modifier.height(16.dp))
+            CButton(
+                text = "All Component",
+                onClick = onNavigateComponents
             )
         }
     }

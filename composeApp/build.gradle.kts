@@ -21,6 +21,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             // Pindahkan Navigation-Compose ke androidMain (karena hanya support Android)
             implementation("androidx.navigation:navigation-compose:2.7.5")
+            implementation(libs.androidx.material3)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -32,6 +33,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             // Perbaikan: Tambahkan nomor versi Compose (misalnya 1.6.0)
+            implementation("androidx.compose.material:material-icons-extended:1.6.0")
             implementation("androidx.compose.material:material-icons-extended:1.6.0")
         }
         commonTest.dependencies {

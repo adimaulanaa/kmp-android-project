@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.bantraka.learningandroid.page.ComponentsPage
 import com.bantraka.learningandroid.page.DashboardPage
 import com.bantraka.learningandroid.page.DetailScreen
 import com.bantraka.learningandroid.page.HomeScreen
@@ -27,6 +28,9 @@ fun AppNavHost() {
                 },
                 onNavigateProfile = {
                     navController.navigate(NavRoute.Profile.route)
+                },
+                onNavigateComponents = {
+                    navController.navigate(NavRoute.Components.route)
                 }
             )
         }
@@ -49,6 +53,14 @@ fun AppNavHost() {
 
         composable(NavRoute.Profile.route) {
             ProfilePage (
+                onBack = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable(NavRoute.Components.route) {
+            ComponentsPage (
                 onBack = {
                     navController.navigateUp()
                 }
