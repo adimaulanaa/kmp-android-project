@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import com.bantraka.learningandroid.page.onboarding.OnboardingPreferences
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -27,7 +28,14 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            App()
+            val onboardingPrefs = OnboardingPreferences(this)
+
+            RootApp(
+                isOnboardingDone = onboardingPrefs.isOnboardingDone,
+                onOnboardingFinished = {
+                    onboardingPrefs.isOnboardingDone = true
+                }
+            )
         }
     }
 }
