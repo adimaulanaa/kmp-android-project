@@ -6,11 +6,25 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private var isLoading = true
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen().setKeepOnScreenCondition {
+            isLoading
+        }
+
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            delay(2000) // ⏱ 2 detik
+            isLoading = false
+        }
 
         setContent {
             App()
