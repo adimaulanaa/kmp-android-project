@@ -1,24 +1,22 @@
 package com.bantraka.learningandroid.page.dashboard.data.repository
 
 import com.bantraka.learningandroid.database.User
-import com.bantraka.learningandroid.page.dashboard.data.datasource.UserLocalDataSource
+import com.bantraka.learningandroid.page.dashboard.data.datasource.DashboardDataSource
 import com.bantraka.learningandroid.page.dashboard.domain.repository.DashboardRepository
 
 class DashboardRepositoryImpl(
-    private val localDataSource: UserLocalDataSource
+    private val dataSource: DashboardDataSource
 ) : DashboardRepository {
 
-    override fun getUsers(): List<User> {
-        return localDataSource.getUsers().map {
-            User(
-                id = it.id,
-                name = it.name,
-                age = it.age.toLong() // konversi ke Int untuk domain model
-            )
-        }
-    }
+    override suspend fun getUsers(): List<User> =
+        dataSource.getUsers()
 
-    override fun addUser(name: String, age: Int) {
-        localDataSource.insertUser(name, age)
-    }
+    override suspend fun addUser(name: String, age: Int) =
+        dataSource.addUser(name, age)
+
+    override suspend fun updateUser(user: User) =
+        dataSource.updateUser(user)
+
+    override suspend fun deleteUser(id: Long) =
+        dataSource.deleteUser(id)
 }

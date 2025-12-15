@@ -6,7 +6,7 @@ import com.bantraka.learningandroid.page.dashboard.domain.repository.DashboardRe
 class GetUsersUseCase(
     private val repository: DashboardRepository
 ) {
-    operator fun invoke(): List<User> {
+    suspend operator fun invoke(): List<User> {
         return repository.getUsers()
     }
 }

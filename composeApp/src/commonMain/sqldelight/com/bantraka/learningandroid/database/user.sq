@@ -11,5 +11,14 @@ insertUser:
 INSERT INTO user
 VALUES (NULL, ?, ?);
 
+updateUser:
+UPDATE user
+SET name = ?, age = ?
+WHERE id = ?;
+
 deleteAllUsers:
 DELETE FROM user;
+
+deleteUser:
+DELETE FROM user
+WHERE id = ?;
