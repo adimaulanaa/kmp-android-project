@@ -1,5 +1,6 @@
 package com.bantraka.learningandroid.page.dashboard.pages
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,11 +22,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.bantraka.learningandroid.core.components.AppTopBar
 import com.bantraka.learningandroid.core.components.CBasicField
 import com.bantraka.learningandroid.core.components.CButton
+import com.bantraka.learningandroid.core.components.CLoading
 import com.bantraka.learningandroid.page.dashboard.domain.model.DashboardViewModel
 import learningandroid.composeapp.generated.resources.Res
 import learningandroid.composeapp.generated.resources.arrow_left
@@ -34,65 +38,66 @@ fun DashboardPage(
     viewModel: DashboardViewModel,
     onBack: () -> Unit
 ) {
-    val users by viewModel.users.collectAsState()
+    val state = viewModel.uiState.collectAsState().value
 
-    var name by remember { mutableStateOf("") }
-    var age by remember { mutableStateOf("") }
+    Box(modifier = Modifier.fillMaxSize()) { // 1. Box full screen
+        Scaffold(
+            topBar = {
+                AppTopBar(
+                    title = "Dashboard Page",
+                    icon = Res.drawable.arrow_left,
+                    onBack = onBack
+                )
+            },
+            floatingActionButtonPosition = FabPosition.Center,
+            floatingActionButton = {
+                CButton(
+                    text = if (state.isLoading) "Loading..." else "Tambah User",
+                    enabled = !state.isLoading,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    onClick = { viewModel.addUser() }
+                )
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp)
+            ) {
+                CBasicField(
+                    value = state.name,
+                    onValueChange = { viewModel.onNameChange(it) },
+                    label = "Nama",
+                )
+                Spacer(Modifier.height(16.dp))
+                CBasicField(
+                    value = state.age,
+                    keyboardType = KeyboardType.Number,
+                    onValueChange = { viewModel.onAgeChange(it) },
+                    label = "Umur"
+                )
+                Spacer(Modifier.height(16.dp))
 
-    Scaffold(
-        topBar = {
-            AppTopBar(
-                title = "Dashboard Page",
-                icon = Res.drawable.arrow_left,
-                onBack = onBack
-            )
-        },
-        floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            CButton(
-                text = "Add User",
-                modifier = Modifier.padding(horizontal = 16.dp),
-                onClick = {
-                    val ageInt = age.toIntOrNull() ?: 0
-                    if (name.isNotBlank() && ageInt > 0) {
-                        viewModel.addUser(name, ageInt)
-                        name = ""
-                        age = ""
+                state.errorMessage?.let { msg ->
+                    Text(
+                        text = msg,
+                        color = Color.Red,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+
+                LazyColumn {
+                    items(state.users) { user ->
+                        Text("${user.name}, ${user.age} tahun")
                     }
                 }
-            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(Modifier.height(16.dp))
-            CBasicField(
-                value = name,
-                onValueChange = { name = it },
-                label = "Nama Anda",
-                hint = "Enter your firstName"
-            )
-            Spacer(Modifier.height(16.dp))
-            CBasicField(
-                value = age,
-                onValueChange = { age = it },
-                label = "Umur Anda",
-                hint = "Enter your age",
-                keyboardType = KeyboardType.Number
-            )
-            Spacer(Modifier.height(24.dp))
-            // List users
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                items(users) { user ->
-                    Text("${user.id}: ${user.name}, ${user.age}")
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
             }
+        }
+
+        // 2. Letakkan CLoading di sini, di atas semua
+        if (state.isLoading) {
+            CLoading(message = "Sedang menyimpan data...")
         }
     }
 }

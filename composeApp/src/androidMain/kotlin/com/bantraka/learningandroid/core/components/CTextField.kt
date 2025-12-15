@@ -2,6 +2,7 @@ package com.bantraka.learningandroid.core.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 
 @Composable
 fun CTextField(
@@ -84,12 +86,14 @@ fun CBasicField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    hint: String,
+    hint: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
+    imeAction: ImeAction = ImeAction.Next, // ✅ default Next, bisa diubah ke Done
+    onImeAction: (() -> Unit)? = null,      // ✅ callback saat tombol keyboard ditekan
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true
 ) {
-    Column (modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         // Label
         Text(
             text = label,
@@ -103,16 +107,13 @@ fun CBasicField(
         val outline = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)
 
         // Kondisi border
-        val borderColor = when {
-            value.isNotEmpty() -> primary.copy(alpha = 0.6f)   // ketika ada value
-            else -> outline                                    // default
-        }
+        val borderColor = if (value.isNotEmpty()) primary.copy(alpha = 0.6f) else outline
 
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
             enabled = isEnabled,
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
 
@@ -142,9 +143,19 @@ fun CBasicField(
                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedTextColor = MaterialTheme.colorScheme.onSurface
             ),
+
+            // ✅ Tambahkan keyboard options
+            keyboardOptions = KeyboardOptions(
+                keyboardType = keyboardType,
+                imeAction = imeAction
+            ),
+
+            // ✅ Tambahkan aksi tombol keyboard
+            keyboardActions = KeyboardActions(
+                onAny = { onImeAction?.invoke() } // bisa memanggil callback
+            )
         )
     }
-
 }
 
 @Composable
