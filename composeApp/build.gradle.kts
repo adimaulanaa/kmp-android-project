@@ -6,12 +6,16 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    // SQLDelight
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
     androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "11"
+            }
         }
     }
 
@@ -26,6 +30,8 @@ kotlin {
             implementation("androidx.appcompat:appcompat:1.7.0")
             // SplashScreen (sudah kamu tambahkan sebelumnya)
             implementation("androidx.core:core-splashscreen:1.0.1")
+//          // SQLDELIGHT (ANDROID)
+            implementation(libs.sqldelight.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -39,9 +45,20 @@ kotlin {
             // Perbaikan: Tambahkan nomor versi Compose (misalnya 1.6.0)
             implementation("androidx.compose.material:material-icons-extended:1.6.0")
             implementation("androidx.compose.material:material-icons-extended:1.6.0")
+            // SQLDELIGHT (COMMON)
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.coroutines)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("com.bantraka.learningandroid.database")
         }
     }
 }

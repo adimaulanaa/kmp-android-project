@@ -1,0 +1,15 @@
+CREATE TABLE user (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    age INTEGER NOT NULL
+);
+
+selectAllUsers:
+SELECT * FROM user;
+
+insertUser:
+INSERT INTO user
+VALUES (NULL, ?, ?);
+
+deleteAllUsers:
+DELETE FROM user;

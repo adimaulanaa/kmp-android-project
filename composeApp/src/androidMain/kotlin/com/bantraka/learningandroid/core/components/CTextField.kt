@@ -85,6 +85,7 @@ fun CBasicField(
     onValueChange: (String) -> Unit,
     label: String,
     hint: String,
+    keyboardType: KeyboardType = KeyboardType.Text,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true
 ) {

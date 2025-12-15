@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import com.bantraka.learningandroid.core.di.AppModule
 import com.bantraka.learningandroid.page.onboarding.OnboardingPreferences
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,6 +22,9 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        // Inisialisasi AppModule dengan Context
+        AppModule.init(this)
 
         lifecycleScope.launch {
             delay(2000) // ⏱ 2 detik

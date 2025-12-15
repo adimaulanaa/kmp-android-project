@@ -4,8 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.bantraka.learningandroid.core.di.AppModule
 import com.bantraka.learningandroid.page.ComponentsPage
-import com.bantraka.learningandroid.page.DashboardPage
+import com.bantraka.learningandroid.page.dashboard.pages.DashboardPage
 import com.bantraka.learningandroid.page.DetailScreen
 import com.bantraka.learningandroid.page.HomeScreen
 import com.bantraka.learningandroid.page.ProfilePage
@@ -44,10 +45,11 @@ fun AppNavHost() {
         }
 
         composable(NavRoute.Dashboard.route) {
-            DashboardPage (
-                onBack = {
-                    navController.navigateUp()
-                }
+            val dashboardViewModel = AppModule.provideDashboardViewModel()
+
+            DashboardPage(
+                viewModel = dashboardViewModel,
+                onBack = { navController.navigateUp() }
             )
         }
 
