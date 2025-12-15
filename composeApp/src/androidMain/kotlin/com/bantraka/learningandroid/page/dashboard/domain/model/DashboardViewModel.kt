@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 data class DashboardUiState(
     val users: List<User> = emptyList(),
-    val id: Long = 0,
+    val id: Long? = null,
     val name: String = "",
     val age: String = "",
     val isLoading: Boolean = false,
@@ -44,40 +44,20 @@ class DashboardViewModel(
 
     fun addUser() {
         val state = _uiState.value
-
-        // 1️⃣ Validasi nama
-        if (state.name.isBlank()) {
-            _uiState.value = state.copy(errorMessage = "Nama harus diisi")
-            return
-        }
-
-        // 2️⃣ Validasi umur
-        val ageInt = state.age.toIntOrNull()
-        if (ageInt == null) {
-            _uiState.value = state.copy(errorMessage = "Umur harus angka")
-            return
-        }
-
-        // 3️⃣ Set loading
         _uiState.value = state.copy(isLoading = true, errorMessage = null)
 
-        // 4️⃣ Jalankan coroutine untuk menambahkan user
         viewModelScope.launch {
-            try {
-                addUserUseCase(state.name, ageInt)   // use case sudah suspend
-                val users = getUsersUseCase()        // use case sudah suspend
+            val result = addUserUseCase(state.name, state.age)
+            result.onSuccess {
+                val users = getUsersUseCase()
                 _uiState.value = state.copy(
                     users = users,
                     name = "",
                     age = "",
-                    isLoading = false,
-                    errorMessage = null
+                    isLoading = false
                 )
-            } catch (e: Exception) {
-                _uiState.value = state.copy(
-                    isLoading = false,
-                    errorMessage = e.message ?: "Terjadi kesalahan"
-                )
+            }.onFailure { e ->
+                _uiState.value = state.copy(isLoading = false, errorMessage = e.message)
             }
         }
     }
@@ -101,35 +81,24 @@ class DashboardViewModel(
 
     fun editUser() {
         val state = _uiState.value
-        val id = state.id
-
-        if (id == 0L) return // tidak ada user untuk diedit
-
-        // Validasi
-        if (state.name.isBlank()) {
-            _uiState.value = state.copy(errorMessage = "Nama harus diisi")
-            return
-        }
-
-        val ageInt = state.age.toIntOrNull()
-        if (ageInt == null) {
-            _uiState.value = state.copy(errorMessage = "Umur harus angka")
-            return
-        }
-
+        if (state.id == null) return
         _uiState.value = state.copy(isLoading = true, errorMessage = null)
-
+        val userToUpdate = User(id = state.id, name = state.name, age = state.age.toLong())
         viewModelScope.launch {
-            updateUserUseCase(User(id = id, name = state.name, age = ageInt.toLong()))
-            val users = getUsersUseCase()
-            _uiState.value = state.copy(
-                users = users,
-                name = "",
-                age = "",
-                id = 0L,              // reset id
-                isLoading = false,
-                errorMessage = null
-            )
+            val result = updateUserUseCase(userToUpdate)
+            result.onSuccess {
+                val users = getUsersUseCase()
+                _uiState.value = state.copy(
+                    users = users,
+                    name = "",
+                    age = "",
+                    id = null,              // reset id
+                    isLoading = false,
+                    errorMessage = null
+                )
+            }.onFailure { e ->
+                _uiState.value = state.copy(isLoading = false, errorMessage = e.message)
+            }
         }
     }
 

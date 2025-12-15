@@ -62,7 +62,7 @@ fun DashboardPage(
                     enabled = !state.isLoading,
                     modifier = Modifier.padding(horizontal = 16.dp),
                     onClick = {
-                        if (state.id == 0L) viewModel.addUser()
+                        if (state.id == null) viewModel.addUser()
                         else viewModel.editUser()
                     }
                 )
